@@ -1,0 +1,42 @@
+# Python files
+*.pyc
+__pycache__/
+
+# Environment variables
+.env
+
+# Django stuff
+db.sqlite3
+
+# Logs
+*.log
+
+# Virtual environment
+venv/
+.env/
+env/
+
+# Byte-compiled files
+*.pyo
+*.pyc
+
+# IDE files
+.vscode/
+.idea/
+
+# Static and media files (if generated dynamically)
+staticfiles/
+media/
+
+# Coverage and testing
+htmlcov/
+*.cover
+*.py,cover
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+
+# System files
+.DS_Store
+Thumbs.db
