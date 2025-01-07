@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-+@h#tnuq#qh9p*w3um*er7$od_8w*eezaor6mvolxyxgoevv=)
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['django-api-3fuv.onrender.com']
+ALLOWED_HOSTS = ['https://django-api-9yhl.onrender.com']
 
 
 
@@ -55,7 +55,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-     'whitenoise.middleware.WhiteNoiseMiddleware',  # Added WhiteNoise middleware
 ]
 
 ROOT_URLCONF = 'api.urls'
