@@ -1,5 +1,6 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
+from . import views
 from .views import (
     PatientViewSet, DoctorViewSet, PharmacistViewSet,
     ReportViewSet, SupportTicketViewSet, PatientDiagnosisViewSet,
@@ -27,6 +28,7 @@ router.register(r'medappointment', AppointmentsViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
+    path('', views.index, name='home'),
     path('api/patients/count/', PatientViewSet.as_view({'get': 'get_patient_count'}), name='patient-count'),
     path('api/doctors/count/', DoctorViewSet.as_view({'get': 'get_doctor_count'}), name='doctor-count'),
     path('api/pharmacists/count/', PharmacistViewSet.as_view({'get': 'get_pharmacist_count'}), name='pharmacist-count'),
