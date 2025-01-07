@@ -136,6 +136,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CORS_ALLOWED_ORIGINS = [
    'http://localhost:5173',
    'https://hospital-management-system-lilac.vercel.app',
+   'https://django-api-9yhl.onrender.com',
 ]
 
 # Allow all origins (if needed, for development purposes only)
