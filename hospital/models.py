@@ -183,6 +183,9 @@ class MedicineInventory(models.Model):
     def __str__(self):
         return self.name
     
+    def stock_value(self):
+        return self.quantity * self.price
+    
 def get_doctors_count(request):
     count = MedDoctor.objects.count()
     return JsonResponse({'count': count})
@@ -193,4 +196,16 @@ def get_patients_count(request):
 
 def get_pharmacists_count(request):
     count = Pharmacist.objects.count()
+    return JsonResponse({'count': count})
+
+def get_appointments_count(request):
+    count = Appointments.objects.count()
+    return JsonResponse({'count': count})
+
+def get_admin_count(request):
+    count = Admin.objects.count()
+    return JsonResponse({'count': count})
+
+def get_medicines_count(request):
+    count = MedicineInventory.objects.count()
     return JsonResponse({'count': count})

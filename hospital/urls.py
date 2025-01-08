@@ -1,6 +1,5 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from . import views
 from .views import (
     PatientViewSet, DoctorViewSet, PharmacistViewSet,
     ReportViewSet, SupportTicketViewSet, PatientDiagnosisViewSet,
@@ -8,7 +7,7 @@ from .views import (
     SupportViewSet, AppointmentsViewSet, ContactViewSet,
     AdminRegistrationView, 
     DoctorRegistrationView, PharmacistRegistrationView, DoctorLoginView, PharmacistLoginView,
-    AdminRegistrationView, AdminLoginView, PharmacistViewSet
+    AdminRegistrationView, AdminLoginView, PharmacistViewSet, AdminViewSet, TotalStockValueView,
     
 )
 
@@ -25,13 +24,18 @@ router.register(r'medicines', MedicineInventoryViewSet)
 router.register(r'doctorprofiles', DoctorProfileViewSet)
 router.register(r'supports', SupportViewSet)
 router.register(r'medappointment', AppointmentsViewSet)
+router.register(r'admins', AdminViewSet)
 
 urlpatterns = [
-    path('', views.index, name='home'),  # Homepage for non-API access
-    path('api/', include(router.urls)),  # API endpoints
+    path('', include(router.urls)),
     path('api/patients/count/', PatientViewSet.as_view({'get': 'get_patient_count'}), name='patient-count'),
     path('api/doctors/count/', DoctorViewSet.as_view({'get': 'get_doctor_count'}), name='doctor-count'),
     path('api/pharmacists/count/', PharmacistViewSet.as_view({'get': 'get_pharmacist_count'}), name='pharmacist-count'),
+    path('api/admins/count/', AdminViewSet.as_view({'get': 'get_admin_count'}), name='admin-count'),
+    path('api/appointments/count/', AppointmentsViewSet.as_view({'get': 'get_appointments_count'}), name='appointments-count'),
+    path('api/medicines/count/', MedicineInventoryViewSet.as_view({'get': 'get_medicine_count'}), name='medicines-count'),
+    path('api/medicines/total-stock-value/', TotalStockValueView.as_view(), name='total-stock-value'),
+    
     
     path('auth/register/admin/', AdminRegistrationView.as_view(), name='register-admin'),
     path('auth/register/doctor/', DoctorRegistrationView.as_view(), name='register-doctor'),

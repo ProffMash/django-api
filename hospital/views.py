@@ -10,15 +10,17 @@ from rest_framework import serializers
 from rest_framework.permissions import AllowAny
 from rest_framework.views import APIView
 import uuid
-from django.http import HttpResponse
+
+from django.db.models import Sum, F
 
 from .serializers import (
     PatientSerializer, DoctorSerializer, PharmacistSerializer, ContactSerializer,
     ReportSerializer, SupportTicketSerializer, PatientDiagnosisSerializer,
     AppointmentSerializer, MedicineInventorySerializer, CountSerializer, 
     DoctorProfileSerializer, SupportSerializer, AppointmentsSerializer,
-     AdminSerializer,
-    DoctorRegistrationSerializer, PharmacistRegistrationSerializer, DoctorLoginSerializer, PharmacistLoginSerializer, AdminRegistrationSerializer, AdminLoginSerializer
+    AdminSerializer,
+    DoctorRegistrationSerializer, PharmacistRegistrationSerializer, DoctorLoginSerializer, 
+    PharmacistLoginSerializer, AdminRegistrationSerializer, AdminLoginSerializer
 )
 
 from rest_framework.decorators import action
@@ -29,9 +31,6 @@ from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
-
-def index(request):
-    return HttpResponse("Welcome to my app!")
 
 class AdminRegistrationView(APIView):
     permission_classes = [AllowAny]
@@ -119,17 +118,23 @@ class AdminLoginView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-
-
-
-
-
-
-
+class AdminViewSet(viewsets.ModelViewSet):
+    queryset = Admin.objects.all()
+    serializer_class = AdminSerializer
+    
+    @action(detail=False, methods=['get'], url_path='count') #admin count
+    def get_admin_count(self, request):
+        count = Admin.objects.count()
+        return Response(CountSerializer({'count': count}).data)
 
 class AppointmentsViewSet(viewsets.ModelViewSet):
-    queryset = Appointments.objects.all()  # Fetch all appointments
-    serializer_class = AppointmentsSerializer  # Use the serializer
+    queryset = Appointments.objects.all()  
+    serializer_class = AppointmentsSerializer  
+    
+    @action(detail=False, methods=['get'], url_path='count')
+    def get_appointments_count(self, request):
+        count = Appointments.objects.count()
+        return Response(CountSerializer({'count': count}).data)
 
 class SupportViewSet(viewsets.ModelViewSet):
     queryset = Support.objects.all()
@@ -167,13 +172,19 @@ class PatientDiagnosisViewSet(viewsets.ModelViewSet):
     queryset = PatientDiagnosis.objects.all()
     serializer_class = PatientDiagnosisSerializer
 
-class AppointmentViewSet(viewsets.ModelViewSet):
-    queryset = Appointment.objects.all()  # Get all appointments
-    serializer_class = AppointmentSerializer  # Use the modified serializer
+class AppointmentViewSet(viewsets.ModelViewSet): ###duplicate###
+    queryset = Appointment.objects.all()  
+    serializer_class = AppointmentSerializer 
+    
 
 class MedicineInventoryViewSet(viewsets.ModelViewSet):
     queryset = MedicineInventory.objects.all()
     serializer_class = MedicineInventorySerializer
+    
+    @action(detail=False, methods=['get'], url_path='count')
+    def get_medicine_count(self, request):
+        count = MedicineInventory.objects.count()
+        return Response(CountSerializer({'count': count}).data)
 
 
 class PatientViewSet(viewsets.ModelViewSet):
@@ -186,7 +197,6 @@ class PatientViewSet(viewsets.ModelViewSet):
         Returns the total count of patients.
         """
         count = Patient.objects.count()
-        # Use the CountSerializer to return the count
         return Response(CountSerializer({'count': count}).data)
 
 class DoctorViewSet(viewsets.ModelViewSet):
@@ -214,3 +224,11 @@ class PharmacistViewSet(viewsets.ModelViewSet):
         count = Pharmacist.objects.count()
         # Use the CountSerializer to return the count
         return Response(CountSerializer({'count': count}).data)
+    
+
+class TotalStockValueView(APIView):
+    def get(self, request, *args, **kwargs):
+        total_stock_value = MedicineInventory.objects.aggregate(
+            total_value=Sum(F('price') * F('quantity'))
+        )['total_value'] or 0
+        return Response({"total_stock_value": total_stock_value})
