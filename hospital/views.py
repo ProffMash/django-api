@@ -32,6 +32,9 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
 
+def index(request):
+    return HttpResponse("Welcome to my app!")
+
 class AdminRegistrationView(APIView):
     permission_classes = [AllowAny]
 
